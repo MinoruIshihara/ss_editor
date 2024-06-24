@@ -34,7 +34,23 @@ function renderChapters(chapters) {
 
 function renderAsHtml(title, subtitle, chapters) {
   return (
-    `<div class="base">  
+    `
+    <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta charset="UTF-8">
+    <title>Novel Page</title>
+    </head>
+
+    <body>
+
+    <div class="header" id="top"><!-- ヘッダー -->
+
+    <h1> 小説集 </a></h1>
+    <h6> 小説集 </h6>
+
+    </div><!-- ヘッダー：終わり -->
+
+    <div class="base">  
       <div class="text">
   
         <hr class="hr3">
@@ -42,7 +58,10 @@ function renderAsHtml(title, subtitle, chapters) {
  
         ${ renderChapters(chapters) }
       </div>
-    </div>`
+    </div>
+
+    </body>
+    `
   )
 }
 
@@ -77,28 +96,45 @@ function HTMLEditor() {
     setSubTitle(e.target.value);
   };
 
+  const handleSave = () => {
+    const textToDownload = `title: ${title}\nsubtitle: ${subTitle}\n${htmlText}`; // titleとsubtitleを追加
+    const blob = new Blob([textToDownload], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'input.txt'; 
+    a.click();
+    URL.revokeObjectURL(url); 
+  };
+
   return (
-    <div style={{ display: 'flex', height: '100%' }}>
-      <div style={{ display: 'flex', flexFlow: 'column', width: '50%', height: '100%' }} >
-        <div style = {{ display: 'flex', margin: '3px', justifyContent: 'space-between' }}>
-          <p>Title: </p>
-          <input value={title} onChange={handleTitleChange} style={{ width: '75%' }}/>
+    <div style={{ height: '100%'}}>
+      <div className="app-bar">
+        <h1>HTML Editor</h1>
+        <button onClick={handleSave}>Save</button>
+      </div>
+      <div style={{ display: 'flex', height: '100%' }}>
+        <div style={{ display: 'flex', flexFlow: 'column', width: '50%', height: '100%' }} >
+          <div style = {{ display: 'flex', margin: '3px', justifyContent: 'space-between' }}>
+            <p>Title: </p>
+            <input value={title} onChange={handleTitleChange} style={{ width: '75%' }}/>
+          </div>
+          <div style = {{ display: 'flex', margin: '3px', justifyContent: 'space-between' }}>
+            <p>SubTitle: </p>
+            <input value={subTitle} onChange={handleSubTitleChange} style={{ width: '75%' }}/>
+          </div>
+          <textarea
+            value={htmlText}
+            onChange={handleHtmlChange}
+            style = {{ flexGrow: 1, margin: '3px' }}
+          />
         </div>
-        <div style = {{ display: 'flex', margin: '3px', justifyContent: 'space-between' }}>
-          <p>SubTitle: </p>
-          <input value={subTitle} onChange={handleSubTitleChange} style={{ width: '75%' }}/>
-        </div>
-        <textarea
-          value={htmlText}
-          onChange={handleHtmlChange}
-          style = {{ flexGrow: 1, margin: '3px' }}
+        <iframe
+          ref={iframeRef}
+          title="Preview"
+          style={{ width: '50%', height: '100%', border: 'none' }}
         />
       </div>
-      <iframe
-        ref={iframeRef}
-        title="Preview"
-        style={{ width: '50%', height: '100%', border: 'none' }}
-      />
     </div>
   );
 }

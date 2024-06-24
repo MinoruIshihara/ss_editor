@@ -327,3 +327,11 @@ h2,h3,h4,h5{
 }
 
 }
+
+.app-bar {
+    background-color: #f0f0f0; /* 背景色 */
+    padding: 10px;
+    display: flex; /* フレックスボックスでレイアウト */
+    justify-content: space-between; /* 要素を左右に配置 */
+    align-items: center; /* 要素を垂直方向に中央揃え */
+}
