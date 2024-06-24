@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  ss-editor: 
+    container_name: ss-editor
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ss-editor:latest
+    volumes:
+      - ./app:/app # ホストとコンテナのディレクトリを共有
+    working_dir: /app/ss_editor
+    ports:
+      - "3000:3000" # ポートをバインド (ホスト:コンテナ)
+    environment:
+      - IDAR_UCHOKSEPOLLING=true # ファイル監視の設定 (Docker for Mac などで必要)
+      - WATCHPACK_POLLING=true
+    tty: true
+    stdin_open: true
+    command: ["npm", "start"]
