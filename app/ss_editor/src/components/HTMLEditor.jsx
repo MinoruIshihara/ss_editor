@@ -29,7 +29,6 @@ function renderChapters(chapters) {
       ${ renderSections(chapter) }\n
       `
   )
-  console.log(chapters_html_list);
   return chapters_html_list.join('\n')
 }
 
@@ -83,11 +82,11 @@ function HTMLEditor() {
       <div style={{ display: 'flex', flexFlow: 'column', width: '50%', height: '100%' }} >
         <div style = {{ display: 'flex', margin: '3px', justifyContent: 'space-between' }}>
           <p>Title: </p>
-          <input value={title} onChange={handleTitleChange}/>
+          <input value={title} onChange={handleTitleChange} style={{ width: '75%' }}/>
         </div>
         <div style = {{ display: 'flex', margin: '3px', justifyContent: 'space-between' }}>
           <p>SubTitle: </p>
-          <input value={subTitle} onChange={handleSubTitleChange}/>
+          <input value={subTitle} onChange={handleSubTitleChange} style={{ width: '75%' }}/>
         </div>
         <textarea
           value={htmlText}

@@ -1,10 +1,10 @@
 ﻿@charset "UTF-8";
-/* @import url("html5reset-1.6.1.css"); */
+@import url("html5reset-1.6.1.css");
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP&display=swap');
 
 /* ↓レイアウト↓ */
 
-*{
+iframe *{
     line-height:150%;
     font-family: 'Noto Serif JP', serif;
 }
