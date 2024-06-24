@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import './styles/style.css';
 
 function parseText(text) {
   const chapters = text.split('endchapter\n');
@@ -47,24 +48,57 @@ function renderAsHtml(title, subtitle, chapters) {
 }
 
 function HTMLEditor() {
-  const [title, setTitle] = useState(' ');
-  const [subTitle, setSubTitle] = useState(' ');
-  const [htmlText, setHtmlText] = useState(' ');
+  const [title, setTitle] = useState('');
+  const [subTitle, setSubTitle] = useState('');
+  const [htmlText, setHtmlText] = useState('');
+
+  const iframeRef = useRef(null);
+  
+  const handleHtmlChange = (e) => {
+    if (iframeRef.current) {
+      const iframeDocument = iframeRef.current.contentDocument;
+      iframeDocument.body.innerHTML = renderAsHtml(title, subTitle, parseText(e.target.value));
+    }
+    setHtmlText(e.target.value);
+  };
+
+  const handleTitleChange = (e) => {
+    if (iframeRef.current) {
+      const iframeDocument = iframeRef.current.contentDocument;
+      iframeDocument.body.innerHTML = renderAsHtml(e.target.value, subTitle, parseText(htmlText));
+    }
+    setTitle(e.target.value);
+  };
+
+  const handleSubTitleChange = (e) => {
+    if (iframeRef.current) {
+      const iframeDocument = iframeRef.current.contentDocument;
+      iframeDocument.body.innerHTML = renderAsHtml(title, e.target.value, parseText(htmlText));
+    }
+    setSubTitle(e.target.value);
+  };
 
   return (
-    <div style={{ display: 'flex' }}>
-      <div style={{ display: 'flex', flexFlow: 'column', width: '50%' }} >
-        <input value={title} onChange={(e) => setTitle(e.target.value)}/>
-        <input value={subTitle} onChange={(e) => setSubTitle(e.target.value)}/>
+    <div style={{ display: 'flex', height: '100%' }}>
+      <div style={{ display: 'flex', flexFlow: 'column', width: '50%', height: '100%' }} >
+        <div style = {{ display: 'flex', margin: '3px', justifyContent: 'space-between' }}>
+          <p>Title: </p>
+          <input value={title} onChange={handleTitleChange}/>
+        </div>
+        <div style = {{ display: 'flex', margin: '3px', justifyContent: 'space-between' }}>
+          <p>SubTitle: </p>
+          <input value={subTitle} onChange={handleSubTitleChange}/>
+        </div>
         <textarea
           value={htmlText}
-          onChange={(e) => setHtmlText(e.target.value)}
-          style = {{ height: '300px' }}
+          onChange={handleHtmlChange}
+          style = {{ flexGrow: 1, margin: '3px' }}
         />
       </div>
-      <div
-        style={{ width: '50%', height: '300px', overflow: 'auto' }}
-        dangerouslySetInnerHTML={{ __html: renderAsHtml(title, subTitle, parseText(htmlText)) }}
+      <iframe
+        ref={iframeRef}
+        title="Preview"
+        style={{ width: '50%', height: '100%', border: 'none' }}
       />
     </div>
   );
