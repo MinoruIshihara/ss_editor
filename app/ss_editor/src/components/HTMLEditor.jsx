@@ -71,6 +71,7 @@ function HTMLEditor() {
   const [htmlText, setHtmlText] = useState('');
 
   const iframeRef = useRef(null);
+  const fileInputRef = useRef(null);
   
   const handleHtmlChange = (e) => {
     if (iframeRef.current) {
@@ -96,13 +97,32 @@ function HTMLEditor() {
     setSubTitle(e.target.value);
   };
 
+  const loadText = (text) => {
+    const ssObj = JSON.parse(text)
+    setTitle(ssObj["title"]);
+    setSubTitle(ssObj["subtitle"]);
+    setHtmlText(ssObj["content"]);
+  }
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setHtmlText(e.target.result);
+        loadText(e.target.result);
+      };
+      reader.readAsText(file);
+    }
+  };
+
   const handleSave = () => {
-    const textToDownload = `title: ${title}\nsubtitle: ${subTitle}\n${htmlText}`; // titleとsubtitleを追加
+    const textToDownload = JSON.stringify({title: title, subtitle: subTitle, content: htmlText});
     const blob = new Blob([textToDownload], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'input.txt'; 
+    a.download = 'input.json'; 
     a.click();
     URL.revokeObjectURL(url); 
   };
@@ -111,9 +131,19 @@ function HTMLEditor() {
     <div style={{ height: '100%'}}>
       <div className="app-bar">
         <h1>HTML Editor</h1>
-        <button onClick={handleSave}>Save</button>
+        <div style={{ display: 'block', marginRight: '20px'}}>
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept=".json"
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+          />
+          <button style={{ margin: '3px'}} onClick={() => fileInputRef.current.click()}>Load</button>
+          <button style={{ margin: '3px'}} onClick={handleSave}>Save</button>
+        </div>
       </div>
-      <div style={{ display: 'flex', height: '100%' }}>
+      <div className='editor-root'>
         <div style={{ display: 'flex', flexFlow: 'column', width: '50%', height: '100%' }} >
           <div style = {{ display: 'flex', margin: '3px', justifyContent: 'space-between' }}>
             <p>Title: </p>
