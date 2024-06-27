@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import renderAsHtml from './RenderAsHtml';
 import './styles/style.css';
 
 function parseText(text) {
@@ -8,61 +9,6 @@ function parseText(text) {
     sections.push(element.split('endsection\n'))
   });
   return sections
-}
-
-function renderSections(sections) {
-  const sections_html_list = sections.map(
-    (section, index) => 
-      `
-      <h4>第${ index + 1 }節</h4>\n
-      ${ section }
-      `
-  )
-  return sections_html_list.join('\n')
-}
-
-function renderChapters(chapters) {
-  const chapters_html_list = chapters.map(
-    (chapter, index) => 
-      `
-      <h2>第${ index + 1 }章</h2>\n
-      ${ renderSections(chapter) }\n
-      `
-  )
-  return chapters_html_list.join('\n')
-}
-
-function renderAsHtml(title, subtitle, chapters) {
-  return (
-    `
-    <head>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta charset="UTF-8">
-    <title>Novel Page</title>
-    </head>
-
-    <body>
-
-    <div class="header" id="top"><!-- ヘッダー -->
-
-    <h1> 小説集 </a></h1>
-    <h6> 小説集 </h6>
-
-    </div><!-- ヘッダー：終わり -->
-
-    <div class="base">  
-      <div class="text">
-  
-        <hr class="hr3">
-        <h1>${ title }<span>${ subtitle }</span></h1>
- 
-        ${ renderChapters(chapters) }
-      </div>
-    </div>
-
-    </body>
-    `
-  )
 }
 
 function HTMLEditor() {
