@@ -48,6 +48,10 @@ function HTMLEditor() {
     setTitle(ssObj["title"]);
     setSubTitle(ssObj["subtitle"]);
     setHtmlText(ssObj["content"]);
+    if (iframeRef.current) {
+      const iframeDocument = iframeRef.current.contentDocument;
+      iframeDocument.body.innerHTML = renderAsHtml(ssObj["title"], ssObj["subtitle"], parseText(ssObj["content"]));
+    }
   }
 
   const handleFileChange = async (event) => {
@@ -55,7 +59,7 @@ function HTMLEditor() {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        setHtmlText(e.target.result);
+        //setHtmlText(e.target.result);
         loadText(e.target.result);
       };
       reader.readAsText(file);

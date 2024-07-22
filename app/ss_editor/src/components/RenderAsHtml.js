@@ -1,4 +1,3 @@
-import React, { useRef, useState } from "react";
 import "./styles/style.css";
 
 function parseText(text) {
@@ -15,7 +14,7 @@ function renderSections(sections) {
     (section, index) =>
       `
       <h4>第${index + 1}節</h4>\n
-      ${section}
+      ${section.replace(/\n「/g, "\n\n「").replace(/」\n/g, "」\n\n").replace(/」\n\n\n「/g, "」\n\n「").replace(/\n/g, "<br>")}
       `
   );
   return sections_html_list.join("\n");
