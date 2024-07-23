@@ -113,6 +113,7 @@ function HTMLEditor() {
           ref={iframeRef}
           title="Preview"
           style={{ width: '50%', height: '100%', border: 'none' }}
+          sandbox
         />
       </div>
     </div>
