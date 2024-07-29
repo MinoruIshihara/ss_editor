@@ -18,7 +18,7 @@ function HTMLEditor() {
 
   const iframeRef = useRef(null);
   const fileInputRef = useRef(null);
-  
+
   const handleHtmlChange = (e) => {
     if (iframeRef.current) {
       const iframeDocument = iframeRef.current.contentDocument;
@@ -47,10 +47,12 @@ function HTMLEditor() {
     const ssObj = JSON.parse(text)
     setTitle(ssObj["title"]);
     setSubTitle(ssObj["subtitle"]);
-    setHtmlText(ssObj["content"]);
+    const chapters = ssObj["chapters"];
+    const htmlText = chapters.map((c)=>c["sections"].join("endsection\n")).join("endchapter\n");
+    setHtmlText(htmlText);
     if (iframeRef.current) {
       const iframeDocument = iframeRef.current.contentDocument;
-      iframeDocument.body.innerHTML = renderAsHtml(ssObj["title"], ssObj["subtitle"], parseText(ssObj["content"]));
+      iframeDocument.body.innerHTML = renderAsHtml(ssObj["title"], ssObj["subtitle"], parseText(htmlText));
     }
   }
 
